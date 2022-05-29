@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <title>[Title] - Leaderscore</title>
+</head>
+
+<body class="page">
+    <div class="main" style="width: 500px; height: 600px;">
+        <input type="text" onkeyup="update()" id="boardname" onfocus="this.style='border: 1px soild black;'"
+            onblur="this.style='border:none'" value="Title">
+        <hr>
+        <div class="board" id="board">
+
+        </div>
+        <form id="addpoints" onsubmit="return false;">
+            <div class="item">
+                Add Points:<br>
+                <select name="" id="users-dropdown"></select><input type="number" id="points"><button type="submit"
+                    class="btn" onclick="addpoints()">Add</button><br><br>
+            </div>
+        </form>
+        <form id="adduser" onsubmit="return false;">
+            <div class="item">
+                Add User:<br><input id="name" type="text">
+                <button type="submit" onclick="adduser()" class="btn">Add</button><br><br>
+            </div>
+        </form>
+        <a style="color: red" onclick="
+            if(confirm('This will delete EVERYTHING! Are you SURE?')==true) {
+            localStorage.clear();window.location=''
+            }
+            ">Delete Leaderscore</a>
+    </div>
+
+
+    <script>
+        var users = [];
+        if (!localStorage.boardscores) {
+        }
+        else {
+            users = JSON.parse(localStorage.boardscores);
+            document.getElementById("boardname").value = localStorage.boardname;
+        }
+        function adduser() {
+            var name = document.getElementById("name").value;
+            var newuser = {};
+            newuser.name = name;
+            newuser.score = 0;
+            users.push(newuser);
+            document.getElementById("name").value = "";
+            update();
+            
+        }
+        function addpoints() {
+            var id = document.getElementById("users-dropdown").value;
+            var points = parseFloat(document.getElementById("points").value);
+            users[id].score += points;
+            document.getElementById("points").value = "";
+            update();
+        }
+        function update() {
+            localStorage.boardname = document.getElementById("boardname").value;
+            document.title = localStorage.boardname + " - Leaderscore";
+            console.log(users);
+            users = users.sort((a, b) => b.score - a.score)
+            var dropdown = document.getElementById("users-dropdown");
+            var board = document.getElementById("board");
+            board.innerHTML = "";
+            dropdown.innerHTML = "";
+            for (i = 0; i < users.length; i++) {
+                var newoption = document.createElement("option");
+                newoption.innerText = users[i].name;
+                newoption.value = i;
+                dropdown.appendChild(newoption)
+
+
+                var newuser = document.createElement("div");
+                newuser.className = "place";
+                newuser.innerHTML = `
+                    <span class="no">${i + 1}</span>
+                    <span class="name">${users[i].name}</span>
+                    <span class="points">${users[i].score}</span>
+                `;
+                board.appendChild(newuser);
+            }
+            localStorage.boardscores = JSON.stringify(users);
+        }
+        update();
+    </script>
+
+
+
+</body>
+
+</html>

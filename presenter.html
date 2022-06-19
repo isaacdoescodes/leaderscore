@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <title>[Title] - Leaderscore</title>
+</head>
+
+<body class="page">
+    <div class="main" style="width: 500px; height: 600px;">
+        <input type="text" onkeyup="update()" id="boardname" onfocus="this.blur()" value="Title">
+        <hr>
+        <div class="board" id="board" style="height: 400px">
+
+        </div>
+        <div id="message">
+
+        </div>
+    </div>
+
+
+    <script>
+        var users = [];
+        var message = "";
+        function update() {
+            users = JSON.parse(localStorage.boardscores);
+            message = localStorage.message;
+            document.getElementById("message").innerHTML = message;
+            document.getElementById("message").style=localStorage.messagestyle;
+            document.getElementById("boardname").value = localStorage.boardname;
+            localStorage.boardname = document.getElementById("boardname").value;
+            document.title = localStorage.boardname + " - Leaderscore";
+            console.log(users);
+            users = users.sort((a, b) => b.score - a.score)
+            var board = document.getElementById("board");
+            board.innerHTML = "";
+            for (i = 0; i < users.length; i++) {
+
+
+                var newuser = document.createElement("div");
+                newuser.className = "place";
+                newuser.innerHTML = `
+                    <span class="no">${i + 1}</span>
+                    <span class="name">${users[i].name}</span>
+                    <span class="points">${users[i].score}</span>
+                `;
+                board.appendChild(newuser);
+            }
+        }
+        window.setInterval(update, 1000)
+    </script>
+
+
+
+</body>
+
+</html>

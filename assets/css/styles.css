@@ -119,3 +119,7 @@ body {
 a {
     text-decoration: underline;
 }
+
+#message {
+    padding: 10px;
+}

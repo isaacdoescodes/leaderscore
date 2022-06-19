@@ -39,8 +39,10 @@
 
 
     <script>
+        
         var users = [];
         if (!localStorage.boardscores) {
+            localStorage.message = "";
         }
         else {
             users = JSON.parse(localStorage.boardscores);
@@ -61,6 +63,8 @@
             var points = parseFloat(document.getElementById("points").value);
             users[id].score += points;
             document.getElementById("points").value = "";
+            localStorage.message = `<b>${users[id].name}</b> got ${points} points!`;
+            localStorage.messagestyle = "background-color: #77dd77;"
             update();
         }
         function update() {
